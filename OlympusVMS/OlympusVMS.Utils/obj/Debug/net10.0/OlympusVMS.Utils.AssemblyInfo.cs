@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OlympusVMS.Utils")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5f746b21b6239262924326024ec505e31646eb37")]
 [assembly: System.Reflection.AssemblyProductAttribute("OlympusVMS.Utils")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OlympusVMS.Utils")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

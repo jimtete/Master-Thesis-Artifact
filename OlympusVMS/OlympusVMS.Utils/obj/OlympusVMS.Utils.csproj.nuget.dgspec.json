@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jim-t\\RiderProjects\\OlympusVMS\\OlympusVMS.Utils\\OlympusVMS.Utils.csproj": {}
+    "C:\\Users\\jim-t\\Documents\\GitHub\\Master-Thesis-Artifact\\OlympusVMS\\OlympusVMS.Utils\\OlympusVMS.Utils.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jim-t\\RiderProjects\\OlympusVMS\\OlympusVMS.Utils\\OlympusVMS.Utils.csproj": {
+    "C:\\Users\\jim-t\\Documents\\GitHub\\Master-Thesis-Artifact\\OlympusVMS\\OlympusVMS.Utils\\OlympusVMS.Utils.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jim-t\\RiderProjects\\OlympusVMS\\OlympusVMS.Utils\\OlympusVMS.Utils.csproj",
+        "projectUniqueName": "C:\\Users\\jim-t\\Documents\\GitHub\\Master-Thesis-Artifact\\OlympusVMS\\OlympusVMS.Utils\\OlympusVMS.Utils.csproj",
         "projectName": "OlympusVMS.Utils",
-        "projectPath": "C:\\Users\\jim-t\\RiderProjects\\OlympusVMS\\OlympusVMS.Utils\\OlympusVMS.Utils.csproj",
+        "projectPath": "C:\\Users\\jim-t\\Documents\\GitHub\\Master-Thesis-Artifact\\OlympusVMS\\OlympusVMS.Utils\\OlympusVMS.Utils.csproj",
         "packagesPath": "C:\\Users\\jim-t\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jim-t\\RiderProjects\\OlympusVMS\\OlympusVMS.Utils\\obj\\",
+        "outputPath": "C:\\Users\\jim-t\\Documents\\GitHub\\Master-Thesis-Artifact\\OlympusVMS\\OlympusVMS.Utils\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jim-t\\AppData\\Roaming\\NuGet\\NuGet.Config"

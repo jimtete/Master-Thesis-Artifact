@@ -1,0 +1,65 @@
+########################################
+# .NET build artifacts (anywhere)
+########################################
+**/bin/
+**/obj/
+**/out/
+**/publish/
+
+########################################
+# Visual Studio / MSBuild user files
+########################################
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.cache
+*.pdb
+
+########################################
+# JetBrains Rider / IntelliJ
+########################################
+.idea/
+*.sln.iml
+*.DotSettings.user
+*.DotSettings.user.*
+
+########################################
+# Tests / coverage
+########################################
+TestResults/
+*.trx
+*.coverage
+coverage*/
+**/*.opencover.xml
+
+########################################
+# Logs
+########################################
+*.log
+
+########################################
+# OS junk
+########################################
+.DS_Store
+Thumbs.db
+
+########################################
+# Local DB files (SQLite etc.)
+# (Keep if you use SQLite "app.db" locally)
+########################################
+**/*.db
+**/*.db-shm
+**/*.db-wal
+
+########################################
+# Node (only if you end up using npm tooling)
+########################################
+**/node_modules/
+
+########################################
+# Local-only config (optional pattern)
+########################################
+**/appsettings.*.local.json
