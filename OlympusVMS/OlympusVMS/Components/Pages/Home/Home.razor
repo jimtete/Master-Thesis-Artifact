@@ -1,27 +1,37 @@
 ﻿@page "/"
+@attribute [StreamRendering]
 
 <PageTitle>Home</PageTitle>
 
-<h1>Meetings for @DateTime.Today.ToShortDateString()</h1>
-<h3>Upcoming Meetings</h3>
+<h1>Meetings for @TodayText</h1>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Meeting Time</th>
-    </tr>
-    </thead>
-    <tbody>
-        @foreach (var guest in GuestRecords)
+@if (IsLoading)
+{
+    <p>Loading…</p>
+}
+else if (ErrorMessage is not null)
+{
+    <p class="text-danger">@ErrorMessage</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Meeting Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var m in Meetings)
         {
             <tr>
-                <td>@guest.FirstName</td>
-                <td>@guest.LastName</td>
-                <td>@guest.MeetingTime.ToString("yyyy-MM-dd HH:mm")</td>
-
+                <td>@m.FirstName</td>
+                <td>@m.LastName</td>
+                <td>@m.MeetingTime.ToString("yyyy-MM-dd HH:mm")</td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
