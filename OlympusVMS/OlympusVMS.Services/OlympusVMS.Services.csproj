@@ -8,8 +8,10 @@
 
     <ItemGroup>
       <Folder Include="Helpers\" />
-      <Folder Include="Interfaces\" />
-      <Folder Include="Services\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OlympusVMS.Utils\OlympusVMS.Utils.csproj" />
     </ItemGroup>
 
 </Project>
