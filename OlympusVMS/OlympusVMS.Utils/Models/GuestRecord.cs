@@ -1,3 +1,5 @@
+using System;
+
 namespace OlympusVMS.Utils.Models;
 
 public class GuestRecord
