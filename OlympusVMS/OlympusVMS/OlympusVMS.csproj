@@ -9,10 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OlympusVMS.Utils\OlympusVMS.Utils.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Infrastructure\" />
+      <ProjectReference Include="..\OlympusVMS.Services\OlympusVMS.Services.csproj"/>
     </ItemGroup>
 
 </Project>
