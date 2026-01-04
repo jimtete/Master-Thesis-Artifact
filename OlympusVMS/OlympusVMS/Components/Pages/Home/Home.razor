@@ -14,7 +14,7 @@
     </tr>
     </thead>
     <tbody>
-        @foreach (var guest in Meetings)
+        @foreach (var guest in GuestRecords)
         {
             <tr>
                 <td>@guest.FirstName</td>
@@ -25,16 +25,3 @@
         }
     </tbody>
 </table>
-
-@code {
-    private List<MeetingRow> Meetings = new()
-    {
-        new("Anna", "Jensen", DateTime.Now.AddHours(1)),
-        new("Nikos", "Papadopoulos", DateTime.Now.AddHours(2)),
-        new("Maria", "Khan", DateTime.Now.AddDays(1).AddHours(3)),
-    };
-
-    private sealed record MeetingRow(string FirstName, string LastName, DateTime MeetingTime);
-}
-
-Welcome to your new app.

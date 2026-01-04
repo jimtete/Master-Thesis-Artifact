@@ -7,4 +7,8 @@
         <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OlympusVMS.Utils\OlympusVMS.Utils.csproj" />
+    </ItemGroup>
+
 </Project>
