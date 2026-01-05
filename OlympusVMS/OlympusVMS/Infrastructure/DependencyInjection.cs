@@ -1,3 +1,4 @@
+using OlympusVMS.Data;
 using OlympusVMS.Services;
 
 namespace OlympusVMS.Infrastructure;
@@ -8,7 +9,7 @@ public static class DependencyInjection
     {
         services.AddRazorComponents()
             .AddInteractiveServerComponents();
-
+        
         services.AddOlympusServices();
         
         return services;
