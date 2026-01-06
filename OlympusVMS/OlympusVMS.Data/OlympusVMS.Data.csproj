@@ -20,4 +20,8 @@
       <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OlympusVMS.Utils\OlympusVMS.Utils.csproj" />
+    </ItemGroup>
+
 </Project>
