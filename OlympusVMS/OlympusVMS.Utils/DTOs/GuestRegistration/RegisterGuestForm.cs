@@ -5,7 +5,7 @@ namespace OlympusVMS.Utils.DTOs;
 public class RegisterGuestForm
 {
     [Required, MinLength(3), MaxLength(100)]
-    public string FirstName { get; set; }  = String.Empty;
+    public string FirstName { get; set; } = String.Empty;
     
     [Required, MinLength(3), MaxLength(100)]
     public string LastName { get; set; }  = String.Empty;

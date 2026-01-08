@@ -9,10 +9,10 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div style="display:flex; flex-direction:column; height: calc(100vh - 10rem); max-width: 900px;">
+    <div style="display:flex; flex-direction:column; height: calc(100vh - 10rem); width: 100%;">
 
         <!-- Fields area (top) -->
-        <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem;">
+        <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 900px; gap: 1rem;">
             <!-- Row 1 -->
             <div style="min-width:0;">
                 <label class="form-label">First Name</label>
@@ -40,7 +40,7 @@
                 <label class="form-label">Meeting Time</label>
                 <InputDate class="form-control"
                            @bind-Value="Form.MeetingTime"
-                           Type="InputDateType.DateTimeLocal" />
+                           Type="InputDateType.DateTimeLocal"/>
                 <ValidationMessage For="@(() => Form.MeetingTime)" />
             </div>
 

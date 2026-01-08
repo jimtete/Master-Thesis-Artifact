@@ -5,8 +5,14 @@ namespace OlympusVMS.Components.Pages.RegisterGuest;
 
 public partial class RegisterGuest : ComponentBase
 {
-    protected RegisterGuestForm Form { get; } = new();
+    [SupplyParameterFromForm]
+    protected RegisterGuestForm Form { get; set; } = new();
     protected string SuccessMessage {  get; set; }
+
+    protected override void OnInitialized()
+    {
+        Form.MeetingTime = DateTime.Now;
+    }
 
     protected void HandleValidSubmit()
     {
