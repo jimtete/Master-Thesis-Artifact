@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Components;
+using OlympusVMS.Services.Interfaces;
 using OlympusVMS.Utils.DTOs;
 
 namespace OlympusVMS.Components.Pages.RegisterGuest;
 
 public partial class RegisterGuest : ComponentBase
 {
+    [Inject]
+    public IMeetingService MeetingService { get; set; }
+    
     [SupplyParameterFromForm]
     protected RegisterGuestForm Form { get; set; } = new();
     protected string SuccessMessage {  get; set; }
@@ -14,8 +18,9 @@ public partial class RegisterGuest : ComponentBase
         Form.MeetingTime = DateTime.Now;
     }
 
-    protected void HandleValidSubmit()
+    protected async Task HandleValidSubmit()
     {
-        Console.WriteLine($"Saved: {Form.FirstName}");
+        await MeetingService.RegisterGuest(Form);
+        SuccessMessage = "Your guest has been successfully registered.";
     }
 }
