@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
+        <None Remove="appsettings*.json"/>
         <Content Include="..\OlympusVMS\appsettings.json">
             <Link>appsettings.json</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

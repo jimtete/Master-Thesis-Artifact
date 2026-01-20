@@ -47,6 +47,7 @@ public class MeetingService : IMeetingService
             LastName = insertedRecord.LastName,
             MeetingTime = insertedRecord.MeetingTime,
             RecordId = insertedRecord.RecordId,
+            RegisteredSuccessfully = true,
         };
     }
 }
