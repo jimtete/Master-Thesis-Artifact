@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympusVMS.Services", "Olym
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympusVMS.Data", "OlympusVMS.Data\OlympusVMS.Data.csproj", "{2041A192-E48C-4C63-ADFC-64EFA645FE1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympusVMS.Integration.Api", "OlympusVMS.Integration.Api\OlympusVMS.Integration.Api.csproj", "{96112770-89DB-4C8A-9DD1-F5458D806294}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2041A192-E48C-4C63-ADFC-64EFA645FE1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2041A192-E48C-4C63-ADFC-64EFA645FE1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2041A192-E48C-4C63-ADFC-64EFA645FE1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96112770-89DB-4C8A-9DD1-F5458D806294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96112770-89DB-4C8A-9DD1-F5458D806294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96112770-89DB-4C8A-9DD1-F5458D806294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96112770-89DB-4C8A-9DD1-F5458D806294}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
