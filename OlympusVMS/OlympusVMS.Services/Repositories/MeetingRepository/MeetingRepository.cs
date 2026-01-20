@@ -12,10 +12,12 @@ public class MeetingRepository : IMeetingRepository
         _context = context;
     }
     
-    public async Task RegisterGuestAsync(GuestRecord record)
+    public async Task<GuestRecord> RegisterGuestAsync(GuestRecord record)
     {
-        _context.GuestRecords.Add(record);
+        await _context.GuestRecords.AddAsync(record);
         
         await _context.SaveChangesAsync();
+        
+        return record;
     }
 }

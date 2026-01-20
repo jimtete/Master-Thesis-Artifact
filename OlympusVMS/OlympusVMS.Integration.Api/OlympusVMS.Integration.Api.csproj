@@ -23,4 +23,9 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OlympusVMS.Services\OlympusVMS.Services.csproj" />
+      <ProjectReference Include="..\OlympusVMS.Utils\OlympusVMS.Utils.csproj" />
+    </ItemGroup>
+
 </Project>

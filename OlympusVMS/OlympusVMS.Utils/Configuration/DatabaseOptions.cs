@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace OlympusVMS.Infrastructure.Configuration;
+namespace OlympusVMS.Utils.Configuration;
 
 public sealed class DatabaseOptions
 {

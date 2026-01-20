@@ -27,7 +27,7 @@ public class MeetingService : IMeetingService
         };
     }
 
-    public async Task<bool> RegisterGuest(RegisterGuestForm form)
+    public async Task<CreateOneMeetingResponse> RegisterGuest(RegisterGuestForm form)
     {
         var guestRecord = new GuestRecord
         {
@@ -36,10 +36,17 @@ public class MeetingService : IMeetingService
             LastName = form.LastName,
             MeetingTime = form.MeetingTime,
             MeetingDurationInHours = form.MeetingDurationInHours,
-            RegisteredBy = "DTE"
+            RegisteredBy = form.RegisteredBy
         };
         
-        await _meetingRepository.RegisterGuestAsync(guestRecord);
-        return true;
+        var insertedRecord = await _meetingRepository.RegisterGuestAsync(guestRecord);
+
+        return new CreateOneMeetingResponse
+        {
+            FirstName = insertedRecord.FirstName,
+            LastName = insertedRecord.LastName,
+            MeetingTime = insertedRecord.MeetingTime,
+            RecordId = insertedRecord.RecordId,
+        };
     }
 }

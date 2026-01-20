@@ -4,5 +4,5 @@ namespace OlympusVMS.Services.Repositories.MeetingRepository;
 
 public interface IMeetingRepository
 {
-    Task RegisterGuestAsync(GuestRecord record);
+    Task<GuestRecord> RegisterGuestAsync(GuestRecord record);
 }

@@ -1,24 +1,23 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace OlympusVMS.Utils.DTOs;
+namespace OlympusVMS.Utils.DTOs.Meeting;
 
-public class RegisterGuestForm
+public class CreateOneMeetingRequest
 {
     [Required, MinLength(3), MaxLength(100)]
-    public string FirstName { get; set; } = String.Empty;
+    public string FirstName { get; set; }
     
     [Required, MinLength(3), MaxLength(100)]
-    public string LastName { get; set; }  = String.Empty;
+    public string LastName { get; set; }
     
     [Required, MinLength(3), MaxLength(200)]
-    public string EmailAddress { get; set; } = String.Empty;
-
+    public string EmailAddress { get; set; }
+    
     [Required, MinLength(3), MaxLength(200)]
-    public string RegisteredBy { get; set; } = "DTE";
+    public string RegisteredBy { get; set; }
     
     [Required]
     public DateTimeOffset MeetingTime { get; set; }
-    
-    [Range(1, 23)]
+
     public int? MeetingDurationInHours { get; set; }
 }

@@ -2,9 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OlympusVMS.Data;
 using OlympusVMS.Infrastructure;
-using OlympusVMS.Infrastructure.Configuration;
+using OlympusVMS.Utils.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
 builder.Services
     .AddOptions<DatabaseOptions>()
     .Bind(builder.Configuration.GetSection(DatabaseOptions.SectionName))
