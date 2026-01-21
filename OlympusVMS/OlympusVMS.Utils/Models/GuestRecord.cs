@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace OlympusVMS.Utils.Models;
 
 public class GuestRecord

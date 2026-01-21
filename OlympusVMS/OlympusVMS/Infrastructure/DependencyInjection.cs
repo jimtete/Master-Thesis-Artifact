@@ -11,6 +11,7 @@ public static class DependencyInjection
             .AddInteractiveServerComponents();
         
         services.AddOlympusServices();
+        services.AddOlympusRepositories();
         
         return services;
     }

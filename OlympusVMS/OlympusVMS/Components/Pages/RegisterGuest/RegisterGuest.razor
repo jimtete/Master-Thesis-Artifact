@@ -1,0 +1,67 @@
+@page "/register-guest"
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Guest Registration</PageTitle>
+
+<h1>Guest Registration</h1>
+
+<EditForm Model="Form" FormName="RegisterGuest" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div style="display:flex; flex-direction:column; height: calc(100vh - 10rem); width: 100%;">
+
+        <!-- Fields area (top) -->
+        <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 900px; gap: 1rem;">
+            <!-- Row 1 -->
+            <div style="min-width:0;">
+                <label class="form-label">First Name</label>
+                <InputText class="form-control" @bind-Value="Form.FirstName" />
+                <ValidationMessage For="@(() => Form.FirstName)" />
+            </div>
+
+            <div style="min-width:0;">
+                <label class="form-label">Last Name</label>
+                <InputText class="form-control" @bind-Value="Form.LastName" />
+                <ValidationMessage For="@(() => Form.LastName)" />
+            </div>
+
+            <!-- Row 2: 50% width -->
+            <div style="min-width:0;">
+                <label class="form-label">Email Address</label>
+                <InputText class="form-control" @bind-Value="Form.EmailAddress" />
+                <ValidationMessage For="@(() => Form.EmailAddress)" />
+            </div>
+
+            <div></div>
+
+            <!-- Row 3 -->
+            <div style="min-width:0;">
+                <label class="form-label">Meeting Time</label>
+                <InputDate class="form-control"
+                           @bind-Value="Form.MeetingTime"
+                           Type="InputDateType.DateTimeLocal"/>
+                <ValidationMessage For="@(() => Form.MeetingTime)" />
+            </div>
+
+            <div style="min-width:0;">
+                <label class="form-label">Meeting Duration (Hours)</label>
+                <InputNumber class="form-control" @bind-Value="Form.MeetingDurationInHours" />
+                <ValidationMessage For="@(() => Form.MeetingDurationInHours)" />
+            </div>
+        </div>
+
+        <!-- Empty space (fills the remaining height) -->
+        <div style="flex: 1 1 auto;"></div>
+
+        <!-- Bottom area: 10% height, button bottom-right -->
+        <div style="flex: 0 0 10%; display:flex; justify-content:flex-end; align-items:flex-end;">
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+    </div>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(SuccessMessage))
+{
+    <div class="alert alert-success mt-3">@SuccessMessage</div>
+}

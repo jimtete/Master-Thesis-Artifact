@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\OlympusVMS.Data\OlympusVMS.Data.csproj" />
       <ProjectReference Include="..\OlympusVMS.Utils\OlympusVMS.Utils.csproj" />
     </ItemGroup>
 

@@ -1,4 +1,4 @@
-namespace OlympusVMS.Infrastructure.Configuration;
+namespace OlympusVMS.Utils.Configuration;
 
 public static class ConfigSections
 {
