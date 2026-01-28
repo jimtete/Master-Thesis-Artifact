@@ -1,6 +1,53 @@
 @page "/calendar"
 @attribute [StreamRendering]
+@rendermode InteractiveServer
 
-<PageTitle>Calendar</PageTitle>
+<h3>Calendar</h3>
 
-<h1>Calendar</h1>
+<div class="cal-toolbar">
+    <button type="button" class="cal-btn" @onclick="() => PrevYear()">«</button>
+    <button type="button" class="cal-btn" @onclick="() => PrevMonth()">‹</button>
+
+    <div class="cal-title">@CurrentMonthTitle</div>
+
+    <button type="button" class="cal-btn" @onclick="() => NextMonth()">›</button>
+    <button type="button" class="cal-btn" @onclick="() => NextYear()">»</button>
+
+    <button type="button" class="cal-btn cal-today" @onclick="() => GoToday()">Today</button>
+
+</div>
+<div style="opacity:.6">Clicks: @Clicks</div>
+
+
+<table class="cal-table">
+    <thead>
+    <tr>
+        @foreach (var name in DayHeaders)
+        {
+            <th>@name</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @for (var week = 0; week < Weeks; week++)
+    {
+        <tr>
+            @for (var day = 0; day < 7; day++)
+            {
+                var cellIndex = week * 7 + day;
+                var cell = Cells[cellIndex];
+
+                <td class="cal-cell @GetCellClass(cell)">
+                    @if (cell is not null)
+                    {
+                        <div class="cal-cell-inner">
+                            <div class="cal-daynum">@cell.Value.Day</div>
+                        </div>
+
+                    }
+                </td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>
