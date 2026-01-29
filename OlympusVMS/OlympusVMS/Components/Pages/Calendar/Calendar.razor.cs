@@ -13,8 +13,6 @@ public partial class Calendar : ComponentBase
 
     protected List<DateOnly?> Cells { get; set; } = new();
     protected int Weeks { get; set; }
-    protected int Clicks { get; set; }
-
 
     protected string CurrentMonthTitle =>
         new DateTime(Year, Month, 1).ToString("MMMM yyyy", CultureInfo.InvariantCulture);
@@ -63,12 +61,10 @@ public partial class Calendar : ComponentBase
 
     protected void NextMonth()
     {
-        Clicks++;
         var dt = new DateTime(Year, Month, 1).AddMonths(1);
         Year = dt.Year;
         Month = dt.Month;
         BuildCalendar();
-        StateHasChanged(); // not normally needed, but makes it explicit
     }
 
 
