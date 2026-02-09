@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympusVMS", "OlympusVMS\OlympusVMS.csproj", "{59E79807-595E-4EFD-B27A-AB1D1EB1E6D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympusVMS.Utils", "OlympusVMS.Utils\OlympusVMS.Utils.csproj", "{23FE5940-5B87-4D8C-ABC5-02592A4B0983}"
@@ -9,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympusVMS.Data", "OlympusVMS.Data\OlympusVMS.Data.csproj", "{2041A192-E48C-4C63-ADFC-64EFA645FE1F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympusVMS.Integration.Api", "OlympusVMS.Integration.Api\OlympusVMS.Integration.Api.csproj", "{96112770-89DB-4C8A-9DD1-F5458D806294}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympusVMS.Integration.Microsoft", "OlympusVMS.Integration.Microsoft\OlympusVMS.Integration.Microsoft.csproj", "{FA062DEF-9E0B-4D75-90D6-7B1CD99C4C15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +41,15 @@ Global
 		{96112770-89DB-4C8A-9DD1-F5458D806294}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96112770-89DB-4C8A-9DD1-F5458D806294}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96112770-89DB-4C8A-9DD1-F5458D806294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA062DEF-9E0B-4D75-90D6-7B1CD99C4C15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA062DEF-9E0B-4D75-90D6-7B1CD99C4C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA062DEF-9E0B-4D75-90D6-7B1CD99C4C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA062DEF-9E0B-4D75-90D6-7B1CD99C4C15}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F9C236D7-6BBF-47FD-B21E-3355E23DC543}
 	EndGlobalSection
 EndGlobal
