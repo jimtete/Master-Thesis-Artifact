@@ -9,8 +9,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OlympusVMS.Data\OlympusVMS.Data.csproj" />
+      <ProjectReference Include="..\OlympusVMS.Integration.Microsoft\OlympusVMS.Integration.Microsoft.csproj" />
       <ProjectReference Include="..\OlympusVMS.Utils\OlympusVMS.Utils.csproj" />
-      <ProjectReference Include="..\OlympusVMS.Services\OlympusVMS.Services.csproj"/>
+      <ProjectReference Include="..\OlympusVMS.Services\OlympusVMS.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>
