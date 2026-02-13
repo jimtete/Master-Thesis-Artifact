@@ -27,6 +27,10 @@ public class GuestRecordConfiguration : IEntityTypeConfiguration<GuestRecord>
             .IsRequired()
             .HasMaxLength(200);
         
+        e.Property(x => x.RegisteredAt)
+            .IsRequired()
+            .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+        
         e.Property(x => x.MeetingDurationInHours)
             .IsRequired(false);
         

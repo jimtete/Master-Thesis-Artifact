@@ -8,7 +8,7 @@ public class GuestRecord
     public string LastName { get; set; } = "";
     public string EmailAddress { get; set; } = "";
     public string RegisteredBy { get; set; } = "";
-
+    public DateTimeOffset RegisteredAt { get; set; }
     public DateTimeOffset MeetingTime { get; set; }
     public int? MeetingDurationInHours { get; set; }
 }
