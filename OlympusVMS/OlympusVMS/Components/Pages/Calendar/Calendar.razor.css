@@ -1,0 +1,88 @@
+.cal-toolbar,
+.cal-table {
+    --olympus-accent: #3a0647;
+}
+
+.cal-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.cal-title {
+    min-width: 160px;
+    text-align: center;
+    font-weight: 300;
+    color: var(--olympus-accent, #3a0647);
+    letter-spacing: 0.2px;
+}
+
+.cal-btn {
+    padding: 6px 10px;
+    border: 1px solid rgba(58, 6, 71, 0.25);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--olympus-accent, #3a0647);
+    font-weight: 300;
+}
+
+.cal-btn:hover {
+    background: rgba(58, 6, 71, 0.08);
+}
+
+.cal-today {
+    margin-left: auto;
+}
+
+.cal-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.cal-table th,
+.cal-table td {
+    border: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+.cal-table th {
+    padding: 10px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.cal-table td {
+    height: 84px;
+    vertical-align: top;
+    padding: 0;
+}
+
+.cal-cell {
+    position: relative;
+}
+
+.cal-daynum {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+
+    font-weight: 300;
+    color: var(--olympus-accent, #3a0647);
+    font-size: 0.95rem;
+    letter-spacing: 0.2px;
+}
+
+.cal-empty {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.cal-weekend {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.cal-today-cell {
+    outline: 2px solid rgba(58, 6, 71, 0.35);
+    outline-offset: -2px;
+}
