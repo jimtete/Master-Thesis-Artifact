@@ -1,87 +1,61 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using OlympusVMS.Data;
-using OlympusVMS.Infrastructure;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
 using OlympusVMS.Integration.Microsoft;
-using OlympusVMS.Integration.Microsoft.Services;
+using OlympusVMS.Services.Interfaces;
+using OlympusVMS.Services.Repositories.MeetingRepository;
+using OlympusVMS.Services.Services;
 using OlympusVMS.Utils.Configuration;
 
-var builder = WebApplication.CreateBuilder(args);
+//var builder = WebApplication.CreateBuilder(args);
 
-// --- DATABASE BYPASS SECTION ---
-// We keep the Options registration so the code doesn't crash if something expects it,
-// but we comment out the actual DbContext and HealthCheck connection logic.
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    // This tells .NET: "Stop checking my dependencies on startup, I know what I'm doing!"
+    EnvironmentName = Environments.Development
+});
 
-builder.Services.AddControllers();
+// --- 1. ENABLE BLAZOR & LOGIN UI ---
+// These are required to handle the web redirect and "Access Denied" consent screens
+builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
+builder.Services.AddRazorPages();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents()
+    .AddMicrosoftIdentityConsentHandler();
 
+// --- 2. DATABASE BYPASS SECTION ---
 builder.Services
     .AddOptions<DatabaseOptions>()
     .Bind(builder.Configuration.GetSection(DatabaseOptions.SectionName));
-// .ValidateOnStart(); // Commented out to prevent startup crash without DB
 
-/* builder.Services.AddDbContext<OlympusContext>((sp, options) =>
-{
-    var dbOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-    options.UseSqlServer(dbOptions.ConnectionString);
-});
-*/
-
-/*
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<OlympusContext>("db");
-*/
-// -------------------------------
-
-//builder.Services.AddOlympusVms();
+// --- 3. MICROSOFT GRAPH REGISTRATION ---
+// This uses the code you wrote in MicrosoftIntegrationExtensions.cs
+// It handles the Key Vault Cert + Delegated User Token automatically.
 builder.Services.AddMicrosoftGraphIntegration(builder.Configuration);
+
+//builder.Services.AddScoped<IMeetingService, MeetingService>();
+//builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
+builder.WebHost.UseUrls("https://localhost:5001");
 
 var app = builder.Build();
 
 app.Logger.LogInformation("Environment: {Env}", app.Environment.EnvironmentName);
 
-// --- TEST FETCH LOGIC ---
-using (var scope = app.Services.CreateScope())
-{
-    var calendarService = scope.ServiceProvider.GetRequiredService<IMicrosoftCalendarService>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+// --- 4. MIDDLEWARE PIPELINE ---
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
 
-    try
-    {
-        logger.LogInformation(">>> STARTING MS GRAPH SMOKE TEST <<<");
+// CRITICAL: These two lines are what actually trigger the Delegated login flow
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseAntiforgery();
 
-        // NEW: Get the options to find the cert name
-        var options = scope.ServiceProvider.GetRequiredService<IOptions<MicrosoftGraphOptions>>().Value;
+app.MapControllers();
+app.MapBlazorHub();
+app.MapRazorComponents<OlympusVMS.Components.App>()
+    .AddInteractiveServerRenderMode();
 
-        // NEW: Check the certificate thumbprint before the call fails
-        // This helps verify if the App Registration actually has this specific cert registered.
-        var keyVaultUri = "https://kv-cfrms-prod.vault.azure.net/";
-        var certService = new KeyVaultCertificateService(scope.ServiceProvider.GetRequiredService<ILogger<KeyVaultCertificateService>>(), keyVaultUri);
-        var cert = await certService.GetCertificateAsync(options.CertificateName);
+app.Logger.LogInformation(">>> APP STARTED. OPEN BROWSER TO TEST DELEGATED GRAPH FLOW <<<");
 
-        logger.LogInformation("USING CERTIFICATE: {Subject}", cert.Subject);
-        logger.LogInformation("CERTIFICATE THUMBPRINT: {Thumbprint}", cert.Thumbprint);
-
-        string testEmail = "dimitrios.tetepoulidis@capital-four.com";
-        var meetings = await calendarService.GetUserMeetingsAsync(testEmail);
-
-        logger.LogInformation("SUCCESS: Found {Count} meetings.", meetings.Count);
-
-        foreach (var meeting in meetings)
-        {
-            logger.LogInformation("Meeting: {Subject} | Start: {Start}",
-                meeting.Subject,
-                meeting.Start?.ToString("yyyy-MM-dd HH:mm zzz"));
-        }
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, ">>> MS GRAPH TEST FAILED! <<<");
-        // Log inner exception as well, as Azure.Identity errors are often nested
-        if (ex.InnerException != null)
-            logger.LogError("Inner Error: {Message}", ex.InnerException.Message);
-    }
-}
-// -----------------------
-
-// Optional: Comment out Run() if you just want it to execute the test and stop
-// app.Run();
+app.Run();

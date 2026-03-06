@@ -1,20 +1,56 @@
 ﻿@page "/counter"
-@rendermode InteractiveServer
+@using OlympusVMS.Integration.Microsoft.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Identity.Web // Added for the ConsentHandler
+@inject IMicrosoftCalendarService CalendarService
+@inject ILogger<Counter> Logger
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler // Inject this
 
-<PageTitle>Counter</PageTitle>
-
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<AuthorizeView>
+    <Authorized>
+        <h3>Authentication Successful!</h3>
+        <p>Check your Visual Studio Console/Terminal for the Meeting data.</p>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Please log in</h3>
+        <a href="MicrosoftIdentity/Account/SignIn">Click here to Sign In</a>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
-    private int currentCount = 0;
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
 
-    private void IncrementCount()
+    protected override async Task OnInitializedAsync()
     {
-        currentCount++;
-    }
+        if (AuthState != null)
+        {
+            var state = await AuthState;
+            if (state.User.Identity?.IsAuthenticated == true)
+            {
+                Logger.LogInformation(">>> RUNNING DELEGATED GRAPH FETCH <<<");
+                try
+                {
+                    var meetings = await CalendarService.GetUserMeetingsAsync(DateTime.Now, DateTime.Now.AddDays(7));
+                    Logger.LogInformation("SUCCESS: Found {Count} meetings.", meetings.Count);
 
+                    foreach (var meeting in meetings)
+                    {
+                        string startTime = meeting.Start?.ToString("yyyy-MM-dd HH:mm") ?? "N/A";
+                        string endTime = meeting.End?.ToString("yyyy-MM-dd HH:mm") ?? "N/A";
+
+                        Logger.LogInformation(
+                            "ID: {Id} | Sub: {Sub} | Loc: {Loc} | Start: {Start} | End: {End}",
+                            meeting.Id, meeting.Subject, meeting.Location, startTime, endTime);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("Token missing or expired. Redirecting to Microsoft Login...");
+                    // This catches the MsalUiRequiredException and automatically redirects the user to log in again!
+                    ConsentHandler.HandleException(ex);
+                }
+            }
+        }
+    }
 }

@@ -1,11 +1,8 @@
-﻿using Azure.Identity;
+﻿using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.Graph;
+using Microsoft.Identity.Web;
 using OlympusVMS.Integration.Microsoft.Services;
-using OlympusVMS.Utils.Configuration;
 
 namespace OlympusVMS.Integration.Microsoft
 {
@@ -13,28 +10,13 @@ namespace OlympusVMS.Integration.Microsoft
     {
         public static IServiceCollection AddMicrosoftGraphIntegration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<MicrosoftGraphOptions>(
-                configuration.GetSection(MicrosoftGraphOptions.SectionName));
+            var initialScopes = configuration.GetValue<string>("MicrosoftGraph:Scopes")?.Split(' ');
 
-            services.AddSingleton(sp =>
-            {
-                var options = sp.GetRequiredService<IOptions<MicrosoftGraphOptions>>().Value;
-                var logger = sp.GetRequiredService<ILogger<KeyVaultCertificateService>>();
-
-                var keyVaultUri = "https://kv-cfrms-prod.vault.azure.net/";
-                var certService = new KeyVaultCertificateService(logger, keyVaultUri);
-
-                var certificate = certService.GetCertificateAsync(options.CertificateName)
-                    .GetAwaiter().GetResult();
-
-                var credential = new ClientCertificateCredential(
-                        options.TenantId,
-                        options.ClientId,
-                        certificate
-                    );
-
-                return new GraphServiceClient(credential);
-            });
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureAd"))
+                .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
+                .AddMicrosoftGraph(configuration.GetSection("MicrosoftGraph"))
+                .AddInMemoryTokenCaches();
 
             services.AddScoped<IMicrosoftCalendarService, MicrosoftCalendarService>();
 

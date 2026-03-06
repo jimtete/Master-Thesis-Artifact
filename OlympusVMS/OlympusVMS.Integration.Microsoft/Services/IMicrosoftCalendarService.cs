@@ -2,6 +2,6 @@
 {
     public interface IMicrosoftCalendarService
     {
-        Task<List<MeetingDto>> GetUserMeetingsAsync(string userEmail);
+        Task<List<MeetingDto>> GetUserMeetingsAsync(DateTime start, DateTime end);
     }
 }
