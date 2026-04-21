@@ -1,56 +1,88 @@
 ﻿@page "/counter"
+@using OlympusVMS.Integration.Microsoft
 @using OlympusVMS.Integration.Microsoft.Services
 @using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.Identity.Web // Added for the ConsentHandler
 @inject IMicrosoftCalendarService CalendarService
 @inject ILogger<Counter> Logger
-@inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler // Inject this
+
+<PageTitle>My Meetings</PageTitle>
 
 <AuthorizeView>
     <Authorized>
-        <h3>Authentication Successful!</h3>
-        <p>Check your Visual Studio Console/Terminal for the Meeting data.</p>
+        <h1>My Meetings (Next 7 Days)</h1>
+
+        @if (isLoading)
+        {
+            <p>Loading...</p>
+        }
+        else if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+        else if (meetings.Count == 0)
+        {
+            <div class="alert alert-info">No meetings found in the next 7 days.</div>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Location</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Organizer</th>
+                        <th>Attendees</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var meeting in meetings)
+                    {
+                        <tr>
+                            <td>@meeting.Subject</td>
+                            <td>@meeting.Location</td>
+                            <td>@meeting.Start?.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@meeting.End?.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@meeting.Organizer</td>
+                            <td>@meeting.Attendees.Count</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </Authorized>
     <NotAuthorized>
-        <h3>Please log in</h3>
-        <a href="MicrosoftIdentity/Account/SignIn">Click here to Sign In</a>
+        <h1>Please Sign In</h1>
+        <p>
+            <a href="MicrosoftIdentity/Account/SignIn" class="btn btn-primary">Sign In with Microsoft</a>
+        </p>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? AuthState { get; set; }
+    private List<MeetingDto> meetings = new();
+    private bool isLoading = true;
+    private string errorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
-        if (AuthState != null)
+        try
         {
-            var state = await AuthState;
-            if (state.User.Identity?.IsAuthenticated == true)
-            {
-                Logger.LogInformation(">>> RUNNING DELEGATED GRAPH FETCH <<<");
-                try
-                {
-                    var meetings = await CalendarService.GetUserMeetingsAsync(DateTime.Now, DateTime.Now.AddDays(7));
-                    Logger.LogInformation("SUCCESS: Found {Count} meetings.", meetings.Count);
-
-                    foreach (var meeting in meetings)
-                    {
-                        string startTime = meeting.Start?.ToString("yyyy-MM-dd HH:mm") ?? "N/A";
-                        string endTime = meeting.End?.ToString("yyyy-MM-dd HH:mm") ?? "N/A";
-
-                        Logger.LogInformation(
-                            "ID: {Id} | Sub: {Sub} | Loc: {Loc} | Start: {Start} | End: {End}",
-                            meeting.Id, meeting.Subject, meeting.Location, startTime, endTime);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError("Token missing or expired. Redirecting to Microsoft Login...");
-                    // This catches the MsalUiRequiredException and automatically redirects the user to log in again!
-                    ConsentHandler.HandleException(ex);
-                }
-            }
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddDays(7);
+            
+            meetings = await CalendarService.GetMyMeetingsAsync(start, end);
+            Logger.LogInformation($"Loaded {meetings.Count} meetings");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading meetings: {ex.Message}";
+            Logger.LogError(ex, "Failed to load meetings");
+        }
+        finally
+        {
+            isLoading = false;
         }
     }
 }

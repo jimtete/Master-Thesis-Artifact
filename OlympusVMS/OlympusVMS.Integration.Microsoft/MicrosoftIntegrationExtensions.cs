@@ -12,6 +12,7 @@ namespace OlympusVMS.Integration.Microsoft
         {
             var initialScopes = configuration.GetValue<string>("MicrosoftGraph:Scopes")?.Split(' ');
 
+            // Register OIDC authentication ONLY - no app-to-app credential needed
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureAd"))
                 .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
@@ -19,6 +20,7 @@ namespace OlympusVMS.Integration.Microsoft
                 .AddInMemoryTokenCaches();
 
             services.AddScoped<IMicrosoftCalendarService, MicrosoftCalendarService>();
+            services.AddHttpContextAccessor();
 
             return services;
         }

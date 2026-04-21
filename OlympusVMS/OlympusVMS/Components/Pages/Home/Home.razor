@@ -9,29 +9,11 @@
 {
     <p>Loading…</p>
 }
-else if (ErrorMessage is not null)
+else if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <p class="text-danger">@ErrorMessage</p>
 }
 else
 {
-    <table class="table">
-        <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Meeting Time</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var m in Meetings)
-        {
-            <tr>
-                <td>@m.FirstName</td>
-                <td>@m.LastName</td>
-                <td>@m.MeetingTime.ToString("yyyy-MM-dd HH:mm")</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <p class="text-info">@ErrorMessage</p>
 }
