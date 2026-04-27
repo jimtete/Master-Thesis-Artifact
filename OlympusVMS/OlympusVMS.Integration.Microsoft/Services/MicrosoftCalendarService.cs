@@ -6,6 +6,7 @@ using Microsoft.Graph;
 using Microsoft.Graph.Models.ODataErrors;
 using OlympusVMS.Integration.Microsoft.Configuration;
 using System.Security.Claims;
+using Microsoft.Identity.Web;
 
 namespace OlympusVMS.Integration.Microsoft.Services
 {
@@ -131,6 +132,11 @@ namespace OlympusVMS.Integration.Microsoft.Services
                     }).ToList() ?? new List<MeetingDto>();
 
                     allMeetings.AddRange(roomMeetings);
+                }
+                catch (MicrosoftIdentityWebChallengeUserException)
+                {
+                    // Bubble up so UI can trigger re-auth/consent flow
+                    throw;
                 }
                 catch (ODataError ex)
                 {

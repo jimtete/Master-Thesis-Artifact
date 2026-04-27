@@ -2,12 +2,14 @@
 @using OlympusVMS.Integration.Microsoft
 @using OlympusVMS.Integration.Microsoft.Services
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Identity.Web
 @inject IMicrosoftCalendarService CalendarService
 @inject ILogger<Counter> Logger
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
 
-<PageTitle>My Meetings & Rooms</PageTitle>
+<PageTitle>Meeting Rooms Overview</PageTitle>
 
 <AuthorizeView>
     <Authorized>
@@ -21,10 +23,50 @@
         }
         else
         {
-            <h1>My Meetings (Next 7 Days)</h1>
+            <h1>External Attendees Summary (Next 7 Days)</h1>
             @if (meetings.Count == 0)
             {
-                <div class="alert alert-info">No meetings found in the next 7 days.</div>
+                <div class="alert alert-info">No meetings found in configured rooms for the next 7 days.</div>
+            }
+            else
+            {
+                var hasExternalEntries = false;
+
+                <table class="table table-striped mb-5">
+                    <thead>
+                        <tr>
+                            <th>Meeting Name</th>
+                            <th>Meeting Time</th>
+                            <th>External Attendees (non @@capital-four.com)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var meeting in meetings)
+                        {
+                            var externalCount = GetExternalAttendeeCount(meeting);
+                            if (externalCount > 0)
+                            {
+                                hasExternalEntries = true;
+                                <tr>
+                                    <td>@meeting.Subject</td>
+                                    <td>@meeting.Start?.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@externalCount</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                @if (!hasExternalEntries)
+                {
+                    <div class="alert alert-info">No meetings with external attendees were found.</div>
+                }
+            }
+
+            <h1>Fetched Meetings from Meeting Rooms (Next 7 Days)</h1>
+            @if (meetings.Count == 0)
+            {
+                <div class="alert alert-info">No meetings found in configured rooms for the next 7 days.</div>
             }
             else
             {
@@ -36,7 +78,7 @@
                             <th>Start Time</th>
                             <th>End Time</th>
                             <th>Organizer</th>
-                            <th>Attendees</th>
+                            <th>Total Attendees</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +97,7 @@
                 </table>
             }
 
-            <h1>Meetings in Configured Rooms (Next 7 Days)</h1>
+            <h1>Configured Meeting Rooms</h1>
             @if (rooms.Count == 0)
             {
                 <div class="alert alert-info">No meeting rooms configured.</div>
@@ -91,6 +133,8 @@
 </AuthorizeView>
 
 @code {
+    private const string CompanyDomain = "@capital-four.com";
+
     private List<MeetingDto> meetings = new();
     private List<RoomDto> rooms = new();
     private bool isLoading = true;
@@ -98,15 +142,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-        if (authState.User.Identity?.IsAuthenticated != true)
-        {
-            var returnUrl = Uri.EscapeDataString("/counter");
-            NavigationManager.NavigateTo($"MicrosoftIdentity/Account/SignIn?returnUrl={returnUrl}", forceLoad: true);
-            return;
-        }
-
         try
         {
             var start = DateTime.Now;
@@ -119,8 +154,11 @@
 
             meetings = await meetingsTask;
             rooms = await roomsTask;
-
-            Logger.LogInformation("Loaded {MeetingsCount} room meetings and {RoomsCount} configured rooms", meetings.Count, rooms.Count);
+        }
+        catch (MicrosoftIdentityWebChallengeUserException ex)
+        {
+            ConsentHandler.HandleException(ex); // triggers auth challenge
+            return;
         }
         catch (Exception ex)
         {
@@ -131,5 +169,12 @@
         {
             isLoading = false;
         }
+    }
+
+    private static int GetExternalAttendeeCount(MeetingDto meeting)
+    {
+        return meeting.Attendees.Count(attendee =>
+            !string.IsNullOrWhiteSpace(attendee.Email) &&
+            !attendee.Email.EndsWith(CompanyDomain, StringComparison.OrdinalIgnoreCase));
     }
 }

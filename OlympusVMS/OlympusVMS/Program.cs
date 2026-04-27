@@ -1,7 +1,8 @@
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using OlympusVMS.Integration.Microsoft;
-using OlympusVMS.Utils.Configuration;
+using OlympusVMS.Services;
+using OlympusVMS.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -15,11 +16,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddMicrosoftIdentityConsentHandler();
 
-builder.Services.AddAuthorizationBuilder();
-
-builder.Services
-    .AddOptions<DatabaseOptions>()
-    .Bind(builder.Configuration.GetSection(DatabaseOptions.SectionName));
+builder.Services.AddScoped<IMeetingService, InMemoryMeetingService>();
 
 builder.Services.AddMicrosoftGraphIntegration(builder.Configuration);
 
@@ -32,7 +29,6 @@ app.Logger.LogInformation("Environment: {Env}", app.Environment.EnvironmentName)
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();

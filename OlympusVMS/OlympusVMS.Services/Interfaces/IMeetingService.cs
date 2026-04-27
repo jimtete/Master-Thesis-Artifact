@@ -7,4 +7,5 @@ public interface IMeetingService
 {
     Task<List<LoadTodayMeetingDto>> LoadTodayMeetings(CancellationToken token);
     Task<CreateOneMeetingResponse> RegisterGuest(RegisterGuestForm form);
+    Task<int> RegisterGuestsFromFormsAsync(IEnumerable<RegisterGuestForm> forms, CancellationToken token = default);
 }

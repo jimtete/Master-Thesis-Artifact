@@ -3,17 +3,40 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Meetings for @TodayText</h1>
+<h1>Upcoming Guest Registrations (@TodayText)</h1>
 
 @if (IsLoading)
 {
     <p>Loading…</p>
 }
-else if (!string.IsNullOrEmpty(ErrorMessage))
+else if (Meetings.Count == 0)
 {
-    <p class="text-danger">@ErrorMessage</p>
+    <p class="text-info">No upcoming guest registrations found.</p>
 }
 else
 {
-    <p class="text-info">@ErrorMessage</p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Meeting Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Meetings)
+            {
+                <tr>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.MeetingTime.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p class="text-muted">@ErrorMessage</p>
 }
