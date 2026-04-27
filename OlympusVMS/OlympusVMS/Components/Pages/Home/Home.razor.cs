@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Components;
+using OlympusVMS.Integration.Microsoft.Services;
 using OlympusVMS.Utils.DTOs.Meeting;
 
 namespace OlympusVMS.Components.Pages.Home;
 
 public partial class Home : ComponentBase, IDisposable
 {
+    [Inject] public IMicrosoftCalendarService CalendarService { get; set; } = default!;
+
     private readonly CancellationTokenSource _cts = new();
 
     private static string TodayText => DateTime.Today.ToShortDateString();
@@ -16,9 +19,23 @@ public partial class Home : ComponentBase, IDisposable
     {
         IsLoading = true;
         Meetings = new List<LoadTodayMeetingDto>();
-        ErrorMessage = "Database bypassed for Microsoft Graph testing.";
-        IsLoading = false;
-        await Task.CompletedTask;
+
+        try
+        {
+            var start = DateTime.Now;
+            var end = DateTime.Now.AddDays(7);
+
+            await CalendarService.GetConfiguredRoomMeetingsAsync(start, end);
+            ErrorMessage = "Authentication successful. Room meetings cache preloaded.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Preload failed: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     public void Dispose()

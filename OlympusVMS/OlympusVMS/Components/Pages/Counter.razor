@@ -4,13 +4,13 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject IMicrosoftCalendarService CalendarService
 @inject ILogger<Counter> Logger
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
-<PageTitle>My Meetings</PageTitle>
+<PageTitle>My Meetings & Rooms</PageTitle>
 
 <AuthorizeView>
     <Authorized>
-        <h1>My Meetings (Next 7 Days)</h1>
-
         @if (isLoading)
         {
             <p>Loading...</p>
@@ -19,37 +19,67 @@
         {
             <div class="alert alert-danger">@errorMessage</div>
         }
-        else if (meetings.Count == 0)
-        {
-            <div class="alert alert-info">No meetings found in the next 7 days.</div>
-        }
         else
         {
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Location</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Organizer</th>
-                        <th>Attendees</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var meeting in meetings)
-                    {
+            <h1>My Meetings (Next 7 Days)</h1>
+            @if (meetings.Count == 0)
+            {
+                <div class="alert alert-info">No meetings found in the next 7 days.</div>
+            }
+            else
+            {
+                <table class="table table-striped mb-5">
+                    <thead>
                         <tr>
-                            <td>@meeting.Subject</td>
-                            <td>@meeting.Location</td>
-                            <td>@meeting.Start?.ToString("yyyy-MM-dd HH:mm")</td>
-                            <td>@meeting.End?.ToString("yyyy-MM-dd HH:mm")</td>
-                            <td>@meeting.Organizer</td>
-                            <td>@meeting.Attendees.Count</td>
+                            <th>Subject</th>
+                            <th>Location</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Organizer</th>
+                            <th>Attendees</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var meeting in meetings)
+                        {
+                            <tr>
+                                <td>@meeting.Subject</td>
+                                <td>@meeting.Location</td>
+                                <td>@meeting.Start?.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@meeting.End?.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@meeting.Organizer</td>
+                                <td>@meeting.Attendees.Count</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <h1>Meetings in Configured Rooms (Next 7 Days)</h1>
+            @if (rooms.Count == 0)
+            {
+                <div class="alert alert-info">No meeting rooms configured.</div>
+            }
+            else
+            {
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Room Name</th>
+                            <th>Email Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var room in rooms)
+                        {
+                            <tr>
+                                <td><strong>@room.DisplayName</strong></td>
+                                <td>@room.Email</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         }
     </Authorized>
     <NotAuthorized>
@@ -62,23 +92,40 @@
 
 @code {
     private List<MeetingDto> meetings = new();
+    private List<RoomDto> rooms = new();
     private bool isLoading = true;
-    private string errorMessage = "";
+    private string errorMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (authState.User.Identity?.IsAuthenticated != true)
+        {
+            var returnUrl = Uri.EscapeDataString("/counter");
+            NavigationManager.NavigateTo($"MicrosoftIdentity/Account/SignIn?returnUrl={returnUrl}", forceLoad: true);
+            return;
+        }
+
         try
         {
             var start = DateTime.Now;
             var end = DateTime.Now.AddDays(7);
-            
-            meetings = await CalendarService.GetMyMeetingsAsync(start, end);
-            Logger.LogInformation($"Loaded {meetings.Count} meetings");
+
+            var meetingsTask = CalendarService.GetConfiguredRoomMeetingsAsync(start, end);
+            var roomsTask = CalendarService.GetAllMeetingRoomsAsync();
+
+            await Task.WhenAll(meetingsTask, roomsTask);
+
+            meetings = await meetingsTask;
+            rooms = await roomsTask;
+
+            Logger.LogInformation("Loaded {MeetingsCount} room meetings and {RoomsCount} configured rooms", meetings.Count, rooms.Count);
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error loading meetings: {ex.Message}";
-            Logger.LogError(ex, "Failed to load meetings");
+            errorMessage = $"Error loading calendar data: {ex.Message}";
+            Logger.LogError(ex, "Failed to load calendar data");
         }
         finally
         {
