@@ -33,6 +33,10 @@ public class GuestRecordConfiguration : IEntityTypeConfiguration<GuestRecord>
         
         e.Property(x => x.MeetingDurationInHours)
             .IsRequired(false);
+
+        e.Property(x => x.Visited)
+            .IsRequired()
+            .HasDefaultValue(false);
         
         e.HasIndex(x => x.EmailAddress);
     }

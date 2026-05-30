@@ -5,17 +5,21 @@
 <h3>Calendar</h3>
 
 <div class="cal-toolbar">
-    <button type="button" class="cal-btn" @onclick="() => PrevYear()">«</button>
-    <button type="button" class="cal-btn" @onclick="() => PrevMonth()">‹</button>
+    <button type="button" class="cal-btn" @onclick="PrevYear" aria-label="Previous year">&laquo;</button>
+    <button type="button" class="cal-btn" @onclick="PrevMonth" aria-label="Previous month">&lsaquo;</button>
 
     <div class="cal-title">@CurrentMonthTitle</div>
 
-    <button type="button" class="cal-btn" @onclick="() => NextMonth()">›</button>
-    <button type="button" class="cal-btn" @onclick="() => NextYear()">»</button>
+    <button type="button" class="cal-btn" @onclick="NextMonth" aria-label="Next month">&rsaquo;</button>
+    <button type="button" class="cal-btn" @onclick="NextYear" aria-label="Next year">&raquo;</button>
 
-    <button type="button" class="cal-btn cal-today" @onclick="() => GoToday()">Today</button>
-
+    <button type="button" class="cal-btn cal-today" @onclick="GoToday">Today</button>
 </div>
+
+@if (IsLoading)
+{
+    <p class="cal-status">Loading meetings...</p>
+}
 
 <table class="cal-table">
     <thead>
@@ -38,10 +42,29 @@
                 <td class="cal-cell @GetCellClass(cell)">
                     @if (cell is not null)
                     {
-                        <div class="cal-cell-inner">
-                            <div class="cal-daynum">@cell.Value.Day</div>
-                        </div>
+                        var meetings = GetMeetings(cell.Value);
+                        var previewMeetings = meetings.Take(3).ToList();
+                        var remainingMeetings = meetings.Count - previewMeetings.Count;
 
+                        <button type="button" class="cal-day-button" @onclick="() => OpenDayPage(cell.Value)">
+                            <div class="cal-cell-inner">
+                                <div class="cal-daynum">@cell.Value.Day</div>
+
+                                <div class="cal-meeting-list">
+                                    @foreach (var meeting in previewMeetings)
+                                    {
+                                        <div class="cal-meeting-item" title="@GetMeetingPreview(meeting)">
+                                            @GetMeetingPreview(meeting)
+                                        </div>
+                                    }
+
+                                    @if (remainingMeetings > 0)
+                                    {
+                                        <div class="cal-meeting-overflow">+@remainingMeetings more</div>
+                                    }
+                                </div>
+                            </div>
+                        </button>
                     }
                 </td>
             }

@@ -1,0 +1,15 @@
+.cd-back {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(58, 6, 71, 0.25);
+    border-radius: 8px;
+    background: transparent;
+    color: #3a0647;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.cd-back:hover {
+    background: rgba(58, 6, 71, 0.08);
+}

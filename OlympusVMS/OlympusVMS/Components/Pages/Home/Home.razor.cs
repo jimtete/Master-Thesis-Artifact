@@ -6,34 +6,43 @@ namespace OlympusVMS.Components.Pages.Home;
 
 public partial class Home : ComponentBase, IDisposable
 {
-    [Inject] public IMeetingService MeetingService { get; set; } = default;
-    
+    [Inject] public IMeetingCache MeetingCache { get; set; } = default!;
+
     private readonly CancellationTokenSource _cts = new();
-    
 
-    private static string TodayText => DateTime.Today.ToShortDateString();
-    private static bool IsLoading { get; set; } = true;
-    private static string ErrorMessage { get; set; }
-    private static IReadOnlyList<LoadTodayMeetingDto> Meetings { get; set; } = Array.Empty<LoadTodayMeetingDto>();
-
+    private string TodayText => DateTime.Today.ToShortDateString();
+    private bool IsLoading { get; set; } = true;
+    private string ErrorMessage { get; set; } = "No meetings scheduled for today.";
+    private IReadOnlyList<CalendarMeetingDto> Meetings { get; set; } = Array.Empty<CalendarMeetingDto>();
 
     protected override async Task OnInitializedAsync()
     {
-        IsLoading = true;
-        
-        Meetings = await MeetingService.LoadTodayMeetings(_cts.Token);
+        MeetingCache.Changed += HandleCacheChanged;
+        IsLoading = !MeetingCache.IsInitialized;
 
-        if (Meetings is null || Meetings.Count == 0)
-        {
-            ErrorMessage = $"{nameof(Meetings)} is empty";
-        }
-        
-        IsLoading = false;
+        await MeetingCache.EnsureLoadedAsync(_cts.Token);
+        SyncFromCache();
     }
 
     public void Dispose()
     {
+        MeetingCache.Changed -= HandleCacheChanged;
         _cts.Cancel();
         _cts.Dispose();
+    }
+
+    private void HandleCacheChanged()
+    {
+        _ = InvokeAsync(() =>
+        {
+            SyncFromCache();
+            StateHasChanged();
+        });
+    }
+
+    private void SyncFromCache()
+    {
+        Meetings = MeetingCache.GetTodayMeetings();
+        IsLoading = !MeetingCache.IsInitialized;
     }
 }

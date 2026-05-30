@@ -8,14 +8,15 @@ public partial class RegisterGuest : ComponentBase
 {
     [Inject]
     public IMeetingService MeetingService { get; set; }
-    
-    [SupplyParameterFromForm]
+
     protected RegisterGuestForm Form { get; set; } = new();
     protected string SuccessMessage {  get; set; }
 
     protected override void OnInitialized()
     {
-        Form.MeetingTime = DateTime.Now;
+        var now = DateTime.Now;
+        Form.MeetingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, now.Kind);
+        Form.RegisteredBy = "admin";
     }
 
     protected async Task HandleValidSubmit()

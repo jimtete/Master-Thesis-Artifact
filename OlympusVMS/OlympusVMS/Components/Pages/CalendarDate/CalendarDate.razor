@@ -1,0 +1,22 @@
+@page "/calendar/date/{DateText}"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+<PageTitle>Calendar Date</PageTitle>
+
+<button type="button" class="cd-back" @onclick="GoBack" aria-label="Go back to calendar">&larr;</button>
+
+<h1>Meetings for @DisplayDateText</h1>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <p class="text-danger">@ErrorMessage</p>
+}
+else if (IsLoading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <MeetingDayList Meetings="Meetings" EmptyMessage="@EmptyMessage" />
+}
