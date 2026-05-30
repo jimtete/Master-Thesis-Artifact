@@ -23,7 +23,7 @@ public class MeetingsController : ControllerBase
         {
             FirstName = request.FirstName,
             LastName = request.LastName,
-            MeetingTime = request.MeetingTime,
+            MeetingTime = request.MeetingTime.LocalDateTime,
             EmailAddress = request.EmailAddress,
             MeetingDurationInHours = request.MeetingDurationInHours,
             RegisteredBy = request.RegisteredBy

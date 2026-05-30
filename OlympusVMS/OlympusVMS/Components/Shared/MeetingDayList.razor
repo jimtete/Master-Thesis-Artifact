@@ -1,0 +1,68 @@
+@using OlympusVMS.Services.Interfaces
+@using OlympusVMS.Utils.DTOs.Meeting
+@inject IMeetingService MeetingService
+
+@if (Meetings.Count == 0)
+{
+    <p class="mdl-empty">@EmptyMessage</p>
+}
+else
+{
+    <table class="mdl-table">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Meeting Time</th>
+            <th>Visited</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var meeting in Meetings)
+        {
+            <tr class="mdl-row" @onclick="() => OpenMeeting(meeting)">
+                <td>@meeting.FirstName</td>
+                <td>@meeting.LastName</td>
+                <td>@meeting.MeetingTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    <span class="mdl-status @(meeting.Visited ? "mdl-status-on" : "mdl-status-off")">
+                        @(meeting.Visited ? "Yes" : "No")
+                    </span>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@if (SelectedMeeting is not null)
+{
+    <div class="mdl-modal-backdrop" @onclick="CloseModal">
+        <div class="mdl-modal" role="dialog" aria-modal="true" aria-labelledby="mdl-modal-title" @onclick:stopPropagation="true">
+            <div class="mdl-modal-header">
+                <div>
+                    <h4 id="mdl-modal-title">Guest Registration</h4>
+                    <p>@SelectedMeeting.FirstName @SelectedMeeting.LastName</p>
+                    <p>@SelectedMeeting.MeetingTime.ToString("dddd, dd MMMM yyyy HH:mm")</p>
+                </div>
+
+                <button type="button" class="mdl-btn" @onclick="CloseModal" aria-label="Close guest details">Close</button>
+            </div>
+
+            <label class="mdl-checkbox">
+                <input type="checkbox" @bind="SelectedVisited" />
+                <span>Visited</span>
+            </label>
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <p class="mdl-error">@ErrorMessage</p>
+            }
+
+            <div class="mdl-actions">
+                <button type="button" class="mdl-btn" @onclick="CloseModal" disabled="@IsSaving">Cancel</button>
+                <button type="button" class="mdl-btn mdl-btn-primary" @onclick="SaveVisitedStatusAsync" disabled="@IsSaving">Save</button>
+            </div>
+        </div>
+    </div>
+}

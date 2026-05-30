@@ -5,6 +5,6 @@ namespace OlympusVMS.Services.Interfaces;
 
 public interface IMeetingService
 {
-    Task<List<LoadTodayMeetingDto>> LoadTodayMeetings(CancellationToken token);
     Task<CreateOneMeetingResponse> RegisterGuest(RegisterGuestForm form);
+    Task SetVisitedStatusAsync(Guid recordId, bool visited, CancellationToken token = default);
 }

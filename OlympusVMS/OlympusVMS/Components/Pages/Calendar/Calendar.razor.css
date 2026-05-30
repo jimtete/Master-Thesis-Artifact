@@ -1,6 +1,7 @@
 .cal-toolbar,
 .cal-table {
     --olympus-accent: #3a0647;
+    --olympus-accent-soft: rgba(58, 6, 71, 0.08);
 }
 
 .cal-toolbar {
@@ -8,6 +9,11 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 12px;
+}
+
+.cal-status {
+    margin: 0 0 12px;
+    color: rgba(58, 6, 71, 0.72);
 }
 
 .cal-title {
@@ -54,7 +60,7 @@
 }
 
 .cal-table td {
-    height: 84px;
+    height: 132px;
     vertical-align: top;
     padding: 0;
 }
@@ -63,11 +69,37 @@
     position: relative;
 }
 
+.cal-day-button {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.cal-day-button:hover {
+    background: var(--olympus-accent-soft);
+}
+
+.cal-day-button:focus-visible {
+    outline: 2px solid rgba(58, 6, 71, 0.45);
+    outline-offset: -2px;
+}
+
+.cal-cell-inner {
+    position: relative;
+    height: 100%;
+    padding: 30px 8px 8px;
+}
+
 .cal-daynum {
     position: absolute;
     top: 6px;
     right: 8px;
-
     font-weight: 300;
     color: var(--olympus-accent, #3a0647);
     font-size: 0.95rem;
@@ -82,7 +114,38 @@
     background: rgba(0, 0, 0, 0.02);
 }
 
+.cal-has-meetings .cal-daynum {
+    font-weight: 600;
+}
+
 .cal-today-cell {
     outline: 2px solid rgba(58, 6, 71, 0.35);
     outline-offset: -2px;
+}
+
+.cal-meeting-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cal-meeting-item,
+.cal-meeting-overflow {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 0.82rem;
+    line-height: 1.2;
+    padding: 4px 6px;
+    border-radius: 6px;
+}
+
+.cal-meeting-item {
+    background: rgba(58, 6, 71, 0.07);
+    color: #2f0539;
+}
+
+.cal-meeting-overflow {
+    color: rgba(58, 6, 71, 0.86);
+    font-weight: 600;
 }

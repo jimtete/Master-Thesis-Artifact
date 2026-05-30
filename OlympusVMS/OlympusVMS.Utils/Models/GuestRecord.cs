@@ -11,4 +11,5 @@ public class GuestRecord
     public DateTimeOffset RegisteredAt { get; set; }
     public DateTimeOffset MeetingTime { get; set; }
     public int? MeetingDurationInHours { get; set; }
+    public bool Visited { get; set; }
 }

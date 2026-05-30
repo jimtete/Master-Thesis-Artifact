@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddOlympusServices(
         this IServiceCollection services)
     {
+        services.AddScoped<IMeetingCache, MeetingCache>();
         services.AddScoped<IMeetingService, MeetingService>();
 
         return services;

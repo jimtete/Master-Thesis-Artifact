@@ -1,4 +1,5 @@
 @page "/register-guest"
+@rendermode InteractiveServer
 @using System.ComponentModel.DataAnnotations
 
 <PageTitle>Guest Registration</PageTitle>
@@ -8,6 +9,7 @@
 <EditForm Model="Form" FormName="RegisterGuest" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
+    <InputText @bind-Value="Form.RegisteredBy" type="hidden" />
 
     <div style="display:flex; flex-direction:column; height: calc(100vh - 10rem); width: 100%;">
 

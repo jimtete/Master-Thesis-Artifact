@@ -14,10 +14,10 @@ public class RegisterGuestForm
     public string EmailAddress { get; set; } = String.Empty;
 
     [Required, MinLength(3), MaxLength(200)]
-    public string RegisteredBy { get; set; } = "DTE";
+    public string RegisteredBy { get; set; } = "admin";
     
     [Required]
-    public DateTimeOffset MeetingTime { get; set; }
+    public DateTime MeetingTime { get; set; }
     
     [Range(1, 23)]
     public int? MeetingDurationInHours { get; set; }

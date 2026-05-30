@@ -9,37 +9,36 @@ namespace OlympusVMS.Services.Services;
 public class MeetingService : IMeetingService
 {
     private readonly IMeetingRepository _meetingRepository;
+    private readonly IMeetingCache _meetingCache;
 
-    public MeetingService(IMeetingRepository meetingRepository)
+    public MeetingService(IMeetingRepository meetingRepository, IMeetingCache meetingCache)
     {
         _meetingRepository = meetingRepository;
-    }
-    
-    public async Task<List<LoadTodayMeetingDto>> LoadTodayMeetings(CancellationToken token = default)
-    {
-        await Task.Delay(500, token);
-
-        return new List<LoadTodayMeetingDto>
-        {
-            new("Anna", "Berlin", DateTimeOffset.Now.AddHours(1)),
-            new("Dimitrios", "Papadopoulos", DateTimeOffset.Now.AddHours(2)),
-            new("Maria", "Khan", DateTimeOffset.Now.AddHours(3)),
-        };
+        _meetingCache = meetingCache;
     }
 
     public async Task<CreateOneMeetingResponse> RegisterGuest(RegisterGuestForm form)
     {
+        var meetingTime = new DateTimeOffset(DateTime.SpecifyKind(form.MeetingTime, DateTimeKind.Local));
+
         var guestRecord = new GuestRecord
         {
             EmailAddress = form.EmailAddress,
             FirstName = form.FirstName,
             LastName = form.LastName,
-            MeetingTime = form.MeetingTime,
+            MeetingTime = meetingTime,
             MeetingDurationInHours = form.MeetingDurationInHours,
             RegisteredBy = form.RegisteredBy
         };
         
         var insertedRecord = await _meetingRepository.RegisterGuestAsync(guestRecord);
+        _meetingCache.UpsertMeeting(new CalendarMeetingDto(
+            insertedRecord.RecordId,
+            insertedRecord.FirstName,
+            insertedRecord.LastName,
+            insertedRecord.MeetingTime,
+            insertedRecord.Visited));
+        _meetingCache.RefreshInBackground();
 
         return new CreateOneMeetingResponse
         {
@@ -49,5 +48,17 @@ public class MeetingService : IMeetingService
             RecordId = insertedRecord.RecordId,
             RegisteredSuccessfully = true,
         };
+    }
+
+    public async Task SetVisitedStatusAsync(Guid recordId, bool visited, CancellationToken token = default)
+    {
+        var updatedRecord = await _meetingRepository.UpdateVisitedStatusAsync(recordId, visited, token);
+
+        _meetingCache.UpsertMeeting(new CalendarMeetingDto(
+            updatedRecord.RecordId,
+            updatedRecord.FirstName,
+            updatedRecord.LastName,
+            updatedRecord.MeetingTime,
+            updatedRecord.Visited));
     }
 }

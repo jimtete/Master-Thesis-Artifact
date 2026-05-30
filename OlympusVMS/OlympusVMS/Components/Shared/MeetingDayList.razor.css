@@ -1,0 +1,122 @@
+.mdl-empty {
+    margin: 0;
+    color: #5c5c5c;
+}
+
+.mdl-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mdl-table th,
+.mdl-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.mdl-row {
+    cursor: pointer;
+    transition: background-color 120ms ease;
+}
+
+.mdl-row:hover {
+    background: rgba(58, 6, 71, 0.06);
+}
+
+.mdl-status {
+    display: inline-block;
+    min-width: 44px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.mdl-status-on {
+    background: rgba(26, 114, 74, 0.14);
+    color: #1a724a;
+}
+
+.mdl-status-off {
+    background: rgba(58, 6, 71, 0.08);
+    color: #3a0647;
+}
+
+.mdl-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.mdl-modal {
+    width: min(440px, 100%);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+    padding: 20px;
+}
+
+.mdl-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.mdl-modal-header h4 {
+    margin: 0 0 8px;
+    color: #3a0647;
+}
+
+.mdl-modal-header p {
+    margin: 0 0 4px;
+}
+
+.mdl-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.mdl-checkbox input {
+    width: 16px;
+    height: 16px;
+}
+
+.mdl-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.mdl-btn {
+    padding: 6px 12px;
+    border: 1px solid rgba(58, 6, 71, 0.25);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    color: #3a0647;
+}
+
+.mdl-btn:disabled {
+    cursor: default;
+    opacity: 0.65;
+}
+
+.mdl-btn-primary {
+    background: #3a0647;
+    color: #fff;
+}
+
+.mdl-error {
+    margin: 0 0 12px;
+    color: #b42318;
+}
